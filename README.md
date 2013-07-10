@@ -26,15 +26,20 @@ Run from source
 
 	go get github.com/mehrvarz/rtcchat
 	cd $GOPATH/src/github.com/mehrvarz/rtcchat
-	(create keys for https, see below; or add -secure=false)
+
+Create keys for https (see below) or add option: -secure=false
+
 	go run rtcchat/main.go [-options]
 
 Run precompiled executable
 --------------------------
 
 	mkdir rtcchat && cd rtcchat
-	download & unzip [http://github.com/files/rtcchat.zip](http://github.com/files/rtcchat.zip)
-	(Create keys for https, see below; or add -secure=false)
+
+Download & unzip [http://github.com/files/rtcchat.zip](http://github.com/files/rtcchat.zip)
+
+Create keys for https (see below) or add option: -secure=false
+
 	./rtcchat [-options]
 	
 Server command line options
