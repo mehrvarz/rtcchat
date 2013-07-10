@@ -3,9 +3,9 @@ rtcchat
 
 WebRTC peer-to-peer chat service written in Go
 
-	Q: What does it takes to connect two browsers, both behind a NAT? 
+Q: What does it takes to connect two browsers, both behind a NAT? 
 
-	A: A secret word
+A: A secret word
 
 Works with Firefox 22+ on the Desktop and with Firefox 25 on Android.
 
@@ -36,7 +36,7 @@ Run precompiled executable
 
 	mkdir rtcchat && cd rtcchat
 
-Download & unzip [http://github.com/files/rtcchat.zip](http://github.com/files/rtcchat.zip)
+Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip)
 
 Create keys for https (see below) or add option: -secure=false
 
