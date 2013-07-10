@@ -29,7 +29,7 @@ Run from source
 
 TODO: show directory structure
 
-Create keys for https (see below) or add option: -secure=false
+Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
 	go run rtcchat/main.go [-options]
 
@@ -42,7 +42,7 @@ Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.co
 
 TODO: show directory structure
 
-Create keys for https (see below) or add option: -secure=false
+Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
 	./rtcchat [-options]
 	
@@ -57,8 +57,8 @@ This tables shows command line options with their default values:
 	-secure=true: set to false to allow signaling over http instead of https
 	-webroot="webroot": set path to webroot
 
-Create keys for https signaling
--------------------------------
+Create keys for WebSocket signaling over https
+----------------------------------------------
 
 	mkdir keys && cd keys
 	openssl req -new -x509 -nodes -out cert.pem -keyout key.pem -days 100
