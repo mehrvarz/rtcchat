@@ -49,6 +49,8 @@ Create keys for https (see below) or add option: -secure=false
 Server command line options
 ---------------------------
 
+This tables shows command line options with their default values:
+
 	-hostaddr="": set host ip address
 	-sigport=8077: set signaling port
 	-stunport=19253: set STUNs port
@@ -63,7 +65,8 @@ Create keys for https signaling
 	(answer questions)
 	cd ..
 
-	Alternatve: link to your existing keys froms /etc/nginx
+Alternative: link to your existing keys froms /etc/nginx
+
 	mkdir keys && cd keys
 	ln -s /etc/nginx/cert.pem cert.pem
 	ln -s /etc/nginx/key.pem key.pem
