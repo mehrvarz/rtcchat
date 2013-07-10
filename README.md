@@ -27,6 +27,8 @@ Run from source
 	go get github.com/mehrvarz/rtcchat
 	cd $GOPATH/src/github.com/mehrvarz/rtcchat
 
+TODO: show directory structure
+
 Create keys for https (see below) or add option: -secure=false
 
 	go run rtcchat/main.go [-options]
@@ -37,6 +39,8 @@ Run precompiled executable
 	mkdir rtcchat && cd rtcchat
 
 Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip)
+
+TODO: show directory structure
 
 Create keys for https (see below) or add option: -secure=false
 
