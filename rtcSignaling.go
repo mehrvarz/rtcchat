@@ -13,8 +13,8 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"time"
 	"text/template"
+	"time"
 )
 
 var TAG = "RtcSignaling"
@@ -23,17 +23,17 @@ func RtcSignaling(secure bool, webroot string, sigport int, stunport int) {
 	certFile := "keys/cert.pem"
 	keyFile := "keys/key.pem"
 
-	if(secure) {
+	if secure {
 		// make sure our https-keys are there
 		_, err1 := os.Stat(certFile)
 		if err1 != nil {
-			fmt.Println(TAG,"missing",certFile)
+			fmt.Println(TAG, "missing", certFile)
 			os.Exit(1)
 		}
 
 		_, err2 := os.Stat(keyFile)
 		if err2 != nil {
-			fmt.Println(TAG,"missing",keyFile)
+			fmt.Println(TAG, "missing", keyFile)
 			os.Exit(1)
 		}
 	}
@@ -43,25 +43,25 @@ func RtcSignaling(secure bool, webroot string, sigport int, stunport int) {
 
 	// handle serving the rtcchat.js template
 	templFile := "/rtcchat.js"
-	templFileUrl := fmt.Sprintf("/rtcchat%s",templFile)
+	templFileUrl := fmt.Sprintf("/rtcchat%s", templFile)
 	http.HandleFunc(templFileUrl, func(w http.ResponseWriter, r *http.Request) {
-	    fmt.Println(TAG,"serve template",r.URL.Path)
-	    if r.Method != "GET" {
-		    http.Error(w, "Method not allowed", 405)
-		    return
-	    }
+		fmt.Println(TAG, "serve template", r.URL.Path)
+		if r.Method != "GET" {
+			http.Error(w, "Method not allowed", 405)
+			return
+		}
 
-		// patch sigport and stunport into rtcchat.js - if rtcchat.js is not modified 
+		// patch sigport and stunport into rtcchat.js - if rtcchat.js is not modified
 		// in production, move next two lines up above HandleFunc() for performance
-	    templFilePath := fmt.Sprintf("%s%s",webroot,templFile)
+		templFilePath := fmt.Sprintf("%s%s", webroot, templFile)
 		homeTempl := template.Must(template.ParseFiles(templFilePath))
 
 		type PatchInfo struct {
-			SigPort int
+			SigPort  int
 			StunPort int
 		}
 		patchInfo := PatchInfo{sigport, stunport}
-	    homeTempl.Execute(w, patchInfo)
+		homeTempl.Execute(w, patchInfo)
 	})
 
 	// handle serving of static web content from the "static" folder
@@ -70,21 +70,21 @@ func RtcSignaling(secure bool, webroot string, sigport int, stunport int) {
 	// handle signaling (matching two clients into one room by secret word)
 	http.Handle("/ws", websocket.Handler(WsHandler))
 
-	localAddr := fmt.Sprintf(":%d",sigport)
-	if(secure) {
+	localAddr := fmt.Sprintf(":%d", sigport)
+	if secure {
 		// start https server and listen for incoming requests using our defined handlers
-		fmt.Println(TAG,"ListenAndServeTLS", localAddr)
+		fmt.Println(TAG, "ListenAndServeTLS", localAddr)
 		err3 := http.ListenAndServeTLS(localAddr, certFile, keyFile, nil)
 		if err3 != nil {
-			fmt.Println(TAG,"fatal error ", err3.Error())
+			fmt.Println(TAG, "fatal error ", err3.Error())
 			os.Exit(1)
 		}
 	} else {
 		// start http server and listen for incoming requests using our defined handlers
-		fmt.Println(TAG,"ListenAndServe", localAddr)
+		fmt.Println(TAG, "ListenAndServe", localAddr)
 		err3 := http.ListenAndServe(localAddr, nil)
 		if err3 != nil {
-			fmt.Println(TAG,"fatal error ", err3.Error())
+			fmt.Println(TAG, "fatal error ", err3.Error())
 			os.Exit(1)
 		}
 	}
@@ -92,7 +92,7 @@ func RtcSignaling(secure bool, webroot string, sigport int, stunport int) {
 
 // handle all client websockets sessions
 func WsHandler(cws *websocket.Conn) {
-	fmt.Println(TAG,"WsHandler start new client session...")
+	fmt.Println(TAG, "WsHandler start new client session...")
 	done := make(chan bool)
 	go WsSessionHandler(cws, done)
 	<-done
@@ -115,7 +115,7 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 	var otherCws *websocket.Conn = nil
 	err := websocket.Message.Send(cws, `{"command":"connect"}`)
 	if err != nil {
-		fmt.Println(TAG,"WsSessionHandler failed to send 'connect' state", err)
+		fmt.Println(TAG, "WsSessionHandler failed to send 'connect' state", err)
 	} else {
 		for {
 			//fmt.Println(TAG,"WsSessionHandler waiting for command from client...")
@@ -124,13 +124,13 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 			//fmt.Printf("===%v\n", msg)
 			if err != nil {
 				if err == io.EOF {
-					fmt.Println(TAG,"WsSessionHandler received EOF for myClientId=", myClientId)
+					fmt.Println(TAG, "WsSessionHandler received EOF for myClientId=", myClientId)
 					if otherCws != nil {
 						// send presence=offline to otherCws
 						websocket.Message.Send(otherCws, `{"command":"presence", "state":"offline"}`)
 					}
 				} else {
-					fmt.Println(TAG,"WsSessionHandler can't receive for myClientId=", myClientId, err)
+					fmt.Println(TAG, "WsSessionHandler can't receive for myClientId=", myClientId, err)
 				}
 				// graceful shutdown by server
 				break
@@ -141,10 +141,10 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 				// create unique clientId
 				myClientId = generateId()
 				// send "ready" with unique clientId
-				fmt.Println(TAG,"WsSessionHandler connect: send ready myClientId:", myClientId)
+				fmt.Println(TAG, "WsSessionHandler connect: send ready myClientId:", myClientId)
 				err := websocket.Message.Send(cws, fmt.Sprintf(`{"command":"ready","clientId": "%s"}`, myClientId))
 				if err != nil {
-					fmt.Println(TAG,"WsSessionHandler connect: websocket.Message.Send err:", err)
+					fmt.Println(TAG, "WsSessionHandler connect: websocket.Message.Send err:", err)
 				}
 
 			case "subscribe":
@@ -152,7 +152,7 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 				r, ok2 := roomInfoMap[roomName]
 				if !ok2 {
 					// no entry = 1st user in room: create new map entry (roomname -> clientid)
-					fmt.Println(TAG,"WsSessionHandler subscribe: new room", roomName, "clientId=", myClientId)
+					fmt.Println(TAG, "WsSessionHandler subscribe: new room", roomName, "clientId=", myClientId)
 					var r roomInfo
 					r.clientId = myClientId
 					r.cws = cws
@@ -162,12 +162,12 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 					err1 := websocket.Message.Send(cws,
 						fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":[]}`, roomName))
 					if err1 != nil {
-						fmt.Println(TAG,"WsSessionHandler subscribe: websocket.Message.Send", err1)
+						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
 					}
 
 				} else {
 					// 2nd user: send to same client: "roomclients" with array of clients in this room
-					fmt.Println(TAG,"WsSessionHandler subscribe: existing room", roomName, "clientId=", myClientId)
+					fmt.Println(TAG, "WsSessionHandler subscribe: existing room", roomName, "clientId=", myClientId)
 					otherCws = r.cws
 					r.cws = cws
 					r.users = 2
@@ -177,17 +177,17 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 					err1 := websocket.Message.Send(cws,
 						fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":%s}`, roomName, clientArray))
 					if err1 != nil {
-						fmt.Println(TAG,"WsSessionHandler subscribe: websocket.Message.Send", err1)
+						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
 						continue
 					}
 
 					// - send to other client in this room: "presence" with data.state ("online") + data.client
-					fmt.Println(TAG,"WsSessionHandler subscribe: send presence online")
+					fmt.Println(TAG, "WsSessionHandler subscribe: send presence online")
 					clientInfo := fmt.Sprintf(`{"clientId":"%s"}`, myClientId)
 					err2 := websocket.Message.Send(otherCws,
 						fmt.Sprintf(`{"command":"presence", "state": "online", "client": %s}`, clientInfo))
 					if err2 != nil {
-						fmt.Println(TAG,"WsSessionHandler subscribe: websocket.Message.Send", err2)
+						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err2)
 						continue
 					}
 				}
@@ -204,14 +204,14 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 				//fmt.Println(TAG,"WsSessionHandler messageForward: myClientId", myClientId)
 				msg, err := json.Marshal(msg["message"])
 				if err != nil {
-					fmt.Println(TAG,"WsSessionHandler messageForward: json.Marshal err:", err)
+					fmt.Println(TAG, "WsSessionHandler messageForward: json.Marshal err:", err)
 					continue
 				}
 				var dd = fmt.Sprintf(`{"command":"messageForward", "message": %s}`, msg)
 				//fmt.Println(TAG,"WsSessionHandler messageForward dd:",dd)
 				err2 := websocket.Message.Send(otherCws, dd)
 				if err2 != nil {
-					fmt.Println(TAG,"WsSessionHandler messageForward: websocket.Message.Send err:", err2)
+					fmt.Println(TAG, "WsSessionHandler messageForward: websocket.Message.Send err:", err2)
 				}
 			}
 		}
@@ -225,12 +225,12 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 			if r.users > 0 {
 				roomInfoMap[roomName] = r
 			} else {
-				fmt.Println(TAG,"WsSessionHandler delete room", roomName)
+				fmt.Println(TAG, "WsSessionHandler delete room", roomName)
 				delete(roomInfoMap, roomName)
 			}
 		}
 	}
-	fmt.Println(TAG,"WsSessionHandler done myClientId", myClientId)
+	fmt.Println(TAG, "WsSessionHandler done myClientId", myClientId)
 	done <- true
 }
 

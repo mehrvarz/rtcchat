@@ -11,6 +11,8 @@ Works with Firefox 22+ on the Desktop and with Firefox 25 on Android.
 
 **Work in progress: uploading of components is still ongoing.**
 
+
+
 Features
 --------
 
@@ -21,20 +23,10 @@ rtcchat...
 - comes with it's own STUN and signaling services
 - no 3rd-party servers will be contacted
 
-Run from source
----------------
-
-	go get github.com/mehrvarz/rtcchat
-	cd $GOPATH/src/github.com/mehrvarz/rtcchat
-
-TODO: show directory structure
-
-Create keys for WebSocket signaling over https (see below) or add option: -secure=false
-
-	go run rtcchat/main.go [-options]
-
 Run precompiled executable
 --------------------------
+
+No special environment needs to be installed. The precompiled executable is fully selfcontained.
 
 	mkdir rtcchat && cd rtcchat
 
@@ -45,6 +37,21 @@ TODO: show directory structure
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
 	./rtcchat [-options]
+
+Run from source
+---------------
+
+Golang 1.1 needs to be installed.
+
+	go get github.com/mehrvarz/rtcchat
+	cd $GOPATH/src/github.com/mehrvarz/rtcchat
+
+TODO: show directory structure
+
+Create keys for WebSocket signaling over https (see below) or add option: -secure=false
+
+	go run rtcchat/main.go [-options]
+
 	
 Server command line options
 ---------------------------
@@ -71,6 +78,8 @@ Alternative: link to your existing keys froms /etc/nginx
 	ln -s /etc/nginx/cert.pem cert.pem
 	ln -s /etc/nginx/key.pem key.pem
 	cd ..
+
+Please note, that the "keys" subfolder is expected to contain two files: "keys/cert.pem" and "keys/key.pem".
 
 Establish p2p connection
 ------------------------

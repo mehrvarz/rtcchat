@@ -16,52 +16,52 @@ func StunUDP(hostaddr string, port int) {
 	var TAG = "StunUDP"
 
 	// start listen to UDP port
-	udpAddr := fmt.Sprintf(":%d",port);
-	fmt.Println(TAG,"ResolveUDPAddr "+udpAddr)
+	udpAddr := fmt.Sprintf(":%d", port)
+	fmt.Println(TAG, "ResolveUDPAddr "+udpAddr)
 	laddr, err := net.ResolveUDPAddr("udp4", udpAddr)
 	if err != nil {
-		fmt.Println("Resolve error",err)
+		fmt.Println("Resolve error", err)
 		os.Exit(1)
 	}
-	fmt.Println(TAG,"ListenUDP laddr=", laddr)
+	fmt.Println(TAG, "ListenUDP laddr=", laddr)
 	c, erl := net.ListenUDP("udp", laddr)
 	if erl != nil {
-		fmt.Println(TAG,"Listen error",erl)
+		fmt.Println(TAG, "Listen error", erl)
 		os.Exit(1)
 	}
 
 	// find out what ip4 host address to advertise
-	localHost := hostaddr+":0"
-	if(hostaddr=="") {
+	localHost := hostaddr + ":0"
+	if hostaddr == "" {
 		// no address given by command line
 		hostname, err := os.Hostname()
 		if err != nil {
-		    fmt.Println(TAG,"Oops:", err)
+			fmt.Println(TAG, "Oops:", err)
 			os.Exit(1)
 		}
-		fmt.Println(TAG,"Hostname",hostname)
+		fmt.Println(TAG, "Hostname", hostname)
 		addrs, err := net.LookupHost(hostname)
 		if err != nil {
-		    fmt.Println(TAG,"Oops:", err)
+			fmt.Println(TAG, "Oops:", err)
 			os.Exit(1)
 		}
 		for _, a := range addrs {
-		    fmt.Println(TAG,"range addrs",a)
-		   	localHost = fmt.Sprintf("%s:0",a)
+			fmt.Println(TAG, "range addrs", a)
+			localHost = fmt.Sprintf("%s:0", a)
 		}
 	}
-	fmt.Println(TAG,"localHost",localHost)
+	fmt.Println(TAG, "localHost", localHost)
 
 	// get the localHost address into an IP4 byte array
 	localHostAddr, ert := net.ResolveTCPAddr("tcp", localHost)
 	if ert != nil {
-		fmt.Println("Resolve localHost error",ert)
+		fmt.Println("Resolve localHost error", ert)
 		os.Exit(1)
 	}
 	hostLocalAddrIP4 := localHostAddr.IP.To4()
-	fmt.Println(TAG,"hostLocalAddrIP4",
-		hostLocalAddrIP4[0],hostLocalAddrIP4[1],hostLocalAddrIP4[2],hostLocalAddrIP4[3])
- 
+	fmt.Println(TAG, "hostLocalAddrIP4",
+		hostLocalAddrIP4[0], hostLocalAddrIP4[1], hostLocalAddrIP4[2], hostLocalAddrIP4[3])
+
 	// start forever service loop
 	for {
 		//fmt.Println(TAG,"Read...",c.LocalAddr().String())
@@ -72,7 +72,7 @@ func StunUDP(hostaddr string, port int) {
 			os.Exit(1)
 		}
 		clientRemoteAddrIP4 := addr.IP.To4()
-		fmt.Println(TAG,"conn addr IP=", clientRemoteAddrIP4, len(clientRemoteAddrIP4))
+		fmt.Println(TAG, "conn addr IP=", clientRemoteAddrIP4, len(clientRemoteAddrIP4))
 		//fmt.Println(TAG,"Read len",l,"\n",hex.Dump(buf[0:l]))  // import "encoding/hex"
 		if l <= 10 {
 			// something is wrong with the request
@@ -169,7 +169,7 @@ func StunUDP(hostaddr string, port int) {
 
 		// SOFTWARE
 		softwareString := "tm-soft " // note: length must be 4-byte aligned!
-		softwareStringLen := len(softwareString)    
+		softwareStringLen := len(softwareString)
 		respBuf[idx] = 0x80
 		respBuf[idx+1] = 0x22
 		respBuf[idx+2] = 0x00
@@ -186,7 +186,7 @@ func StunUDP(hostaddr string, port int) {
 		//fmt.Println(TAG,"write len",idx,"\n",hex.Dump(respBuf[0:idx]))  // import "encoding/hex"
 		_, ere := c.WriteTo(respBuf[0:idx], addr)
 		if ere != nil {
-			fmt.Println(TAG,"write error", ere)
+			fmt.Println(TAG, "write error", ere)
 		} else {
 			//fmt.Println(TAG,"written len",wlen)
 		}
