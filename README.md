@@ -8,11 +8,9 @@ A: A secret word.
 
 <img style="margin-left:0px" src="rtcchat.png" /><br/>
 
-Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
+rtc chat works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
 
-Try out live rtcchat: [http://timur.mobi/rtcchat](http://timur.mobi/rtcchat/)
-
-(Site is using a self-signed certificate.)
+Try out: [live rtcchat](http://timur.mobi/rtcchat/) (Site is using a self-signed certificate for https)
 
 Features
 --------
