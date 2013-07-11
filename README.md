@@ -35,7 +35,7 @@ What is special
 
 Two things!
 
-1. Unlike other WebRTC solutions, the rtcchat client will NOT instruct your device 
+1. Unlike other WebRTC solutions, rtc chat client will NOT instruct your device 
 to contact any 3rd party servers, say, in order to retrieve your devices own public IP address.
 rtcchat comes with it's own STUN and signaling services.
 
@@ -48,9 +48,15 @@ Run precompiled executable
 	mkdir rtcchat
 	cd rtcchat
 
-1. Download one of the precompiled executable binaries for your platform from: 
+1. Download one of the precompiled executable binaries from: 
 [http://github.com/mehrvarz/files](http://github.com/mehrvarz/files)
-(click 'Raw')
+(click 'Raw'). Executables are available for the following platforms:
+
+- rtcchat-linux-386.zip
+- rtcchat-linux-amd64.zip
+- rtcchat-linux-arm.zip
+- rtcchat-darwin-amd64.zip
+- rtcchat-windows-amd64.zip
 
 2. Download the platform neutral web application:
 [https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
