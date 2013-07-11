@@ -113,121 +113,124 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 	var myClientId string
 	var roomName string
 	var otherCws *websocket.Conn = nil
+
 	err := websocket.Message.Send(cws, `{"command":"connect"}`)
 	if err != nil {
 		fmt.Println(TAG, "WsSessionHandler failed to send 'connect' state", err)
-	} else {
-		for {
-			//fmt.Println(TAG,"WsSessionHandler waiting for command from client...")
-			var msg map[string]string
-			err := websocket.JSON.Receive(cws, &msg)
-			//fmt.Printf("===%v\n", msg)
-			if err != nil {
-				if err == io.EOF {
-					fmt.Println(TAG, "WsSessionHandler received EOF for myClientId=", myClientId)
-					if otherCws != nil {
-						// send presence=offline to otherCws
-						websocket.Message.Send(otherCws, `{"command":"presence", "state":"offline"}`)
-					}
-				} else {
-					fmt.Println(TAG, "WsSessionHandler can't receive for myClientId=", myClientId, err)
+		done <- true
+		return
+	} 
+
+	for {
+		//fmt.Println(TAG,"WsSessionHandler waiting for command from client...")
+		var msg map[string]string
+		err := websocket.JSON.Receive(cws, &msg)
+		//fmt.Printf("===%v\n", msg)
+		if err != nil {
+			if err == io.EOF {
+				fmt.Println(TAG, "WsSessionHandler received EOF for myClientId=", myClientId)
+				if otherCws != nil {
+					// send presence=offline to otherCws
+					websocket.Message.Send(otherCws, `{"command":"presence", "state":"offline"}`)
 				}
-				// graceful shutdown by server
-				break
+			} else {
+				fmt.Println(TAG, "WsSessionHandler can't receive for myClientId=", myClientId, err)
 			}
-
-			switch msg["command"] {
-			case "connect":
-				// create unique clientId
-				myClientId = generateId()
-				// send "ready" with unique clientId
-				fmt.Println(TAG, "WsSessionHandler connect: send ready myClientId:", myClientId)
-				err := websocket.Message.Send(cws, fmt.Sprintf(`{"command":"ready","clientId": "%s"}`, myClientId))
-				if err != nil {
-					fmt.Println(TAG, "WsSessionHandler connect: websocket.Message.Send err:", err)
-				}
-
-			case "subscribe":
-				roomName = msg["room"]
-				r, ok2 := roomInfoMap[roomName]
-				if !ok2 {
-					// no entry = 1st user in room: create new map entry (roomname -> clientid)
-					fmt.Println(TAG, "WsSessionHandler subscribe: new room", roomName, "clientId=", myClientId)
-					var r roomInfo
-					r.clientId = myClientId
-					r.cws = cws
-					r.users = 1
-					roomInfoMap[roomName] = r
-
-					err1 := websocket.Message.Send(cws,
-						fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":[]}`, roomName))
-					if err1 != nil {
-						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
-					}
-
-				} else {
-					// 2nd user: send to same client: "roomclients" with array of clients in this room
-					fmt.Println(TAG, "WsSessionHandler subscribe: existing room", roomName, "clientId=", myClientId)
-					otherCws = r.cws
-					r.cws = cws
-					r.users = 2
-					roomInfoMap[roomName] = r
-
-					clientArray := fmt.Sprintf(`[{"clientId": "%s"}]`, r.clientId)
-					err1 := websocket.Message.Send(cws,
-						fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":%s}`, roomName, clientArray))
-					if err1 != nil {
-						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
-						continue
-					}
-
-					// - send to other client in this room: "presence" with data.state ("online") + data.client
-					fmt.Println(TAG, "WsSessionHandler subscribe: send presence online")
-					clientInfo := fmt.Sprintf(`{"clientId":"%s"}`, myClientId)
-					err2 := websocket.Message.Send(otherCws,
-						fmt.Sprintf(`{"command":"presence", "state": "online", "client": %s}`, clientInfo))
-					if err2 != nil {
-						fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err2)
-						continue
-					}
-				}
-
-			case "messageForward":
-				// send "messageForward" and forward msg["data"]
-				if otherCws == nil {
-					// the 1st time user 1 does a messageForward, it does not yet know otherCws
-					r, ok2 := roomInfoMap[roomName]
-					if ok2 {
-						otherCws = r.cws
-					}
-				}
-				//fmt.Println(TAG,"WsSessionHandler messageForward: myClientId", myClientId)
-				msg, err := json.Marshal(msg["message"])
-				if err != nil {
-					fmt.Println(TAG, "WsSessionHandler messageForward: json.Marshal err:", err)
-					continue
-				}
-				var dd = fmt.Sprintf(`{"command":"messageForward", "message": %s}`, msg)
-				//fmt.Println(TAG,"WsSessionHandler messageForward dd:",dd)
-				err2 := websocket.Message.Send(otherCws, dd)
-				if err2 != nil {
-					fmt.Println(TAG, "WsSessionHandler messageForward: websocket.Message.Send err:", err2)
-				}
-			}
+			// graceful shutdown by server
+			break
 		}
 
-		if roomName != "" {
-			// the last user leaving the room must clean up
-			r := roomInfoMap[roomName]
-			if r.users > 0 {
-				r.users--
+		switch msg["command"] {
+		case "connect":
+			// create unique clientId
+			myClientId = generateId()
+			// send "ready" with unique clientId
+			fmt.Println(TAG, "WsSessionHandler connect: send ready myClientId:", myClientId)
+			err := websocket.Message.Send(cws, fmt.Sprintf(`{"command":"ready","clientId": "%s"}`, myClientId))
+			if err != nil {
+				fmt.Println(TAG, "WsSessionHandler connect: websocket.Message.Send err:", err)
 			}
-			if r.users > 0 {
+
+		case "subscribe":
+			roomName = msg["room"]
+			r, ok2 := roomInfoMap[roomName]
+			if !ok2 {
+				// no entry = 1st user in room: create new map entry (roomname -> clientid)
+				fmt.Println(TAG, "WsSessionHandler subscribe: new room", roomName, "clientId=", myClientId)
+				var r roomInfo
+				r.clientId = myClientId
+				r.cws = cws
+				r.users = 1
 				roomInfoMap[roomName] = r
+
+				err1 := websocket.Message.Send(cws,
+					fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":[]}`, roomName))
+				if err1 != nil {
+					fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
+				}
+
 			} else {
-				fmt.Println(TAG, "WsSessionHandler delete room", roomName)
-				delete(roomInfoMap, roomName)
+				// 2nd user: send to same client: "roomclients" with array of clients in this room
+				fmt.Println(TAG, "WsSessionHandler subscribe: existing room", roomName, "clientId=", myClientId)
+				otherCws = r.cws
+				r.cws = cws
+				r.users = 2
+				roomInfoMap[roomName] = r
+
+				clientArray := fmt.Sprintf(`[{"clientId": "%s"}]`, r.clientId)
+				err1 := websocket.Message.Send(cws,
+					fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":%s}`, roomName, clientArray))
+				if err1 != nil {
+					fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
+					continue
+				}
+
+				// - send to other client in this room: "presence" with data.state ("online") + data.client
+				fmt.Println(TAG, "WsSessionHandler subscribe: send presence online")
+				clientInfo := fmt.Sprintf(`{"clientId":"%s"}`, myClientId)
+				err2 := websocket.Message.Send(otherCws,
+					fmt.Sprintf(`{"command":"presence", "state": "online", "client": %s}`, clientInfo))
+				if err2 != nil {
+					fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err2)
+					continue
+				}
 			}
+
+		case "messageForward":
+			// send "messageForward" and forward msg["data"]
+			if otherCws == nil {
+				// the 1st time user 1 does a messageForward, it does not yet know otherCws
+				r, ok2 := roomInfoMap[roomName]
+				if ok2 {
+					otherCws = r.cws
+				}
+			}
+			//fmt.Println(TAG,"WsSessionHandler messageForward: myClientId", myClientId)
+			msg, err := json.Marshal(msg["message"])
+			if err != nil {
+				fmt.Println(TAG, "WsSessionHandler messageForward: json.Marshal err:", err)
+				continue
+			}
+			var dd = fmt.Sprintf(`{"command":"messageForward", "message": %s}`, msg)
+			//fmt.Println(TAG,"WsSessionHandler messageForward dd:",dd)
+			err2 := websocket.Message.Send(otherCws, dd)
+			if err2 != nil {
+				fmt.Println(TAG, "WsSessionHandler messageForward: websocket.Message.Send err:", err2)
+			}
+		}
+	}
+
+	if roomName != "" {
+		// the last user leaving the room must clean up
+		r := roomInfoMap[roomName]
+		if r.users > 0 {
+			r.users--
+		}
+		if r.users > 0 {
+			roomInfoMap[roomName] = r
+		} else {
+			fmt.Println(TAG, "WsSessionHandler delete room", roomName)
+			delete(roomInfoMap, roomName)
 		}
 	}
 	fmt.Println(TAG, "WsSessionHandler done myClientId", myClientId)
