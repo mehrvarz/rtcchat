@@ -3,7 +3,7 @@ rtc chat
 
 WebRTC peer-to-peer chat service written in Go
 
-Q: What does it takes to connect two browsers, both behind NAT?<br/> 
+Q: What does it take to connect two browsers, both behind NAT?<br/> 
 A: A secret word.
 
 <img style="margin-left:0px" src="rtcchat.png" /><br/>
