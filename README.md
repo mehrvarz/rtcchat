@@ -31,11 +31,18 @@ No special environment needs to be installed. The precompiled executable is full
 
 	mkdir rtcchat && cd rtcchat
 
-(TODO: Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip))
+Download a precompiled binary for your platform from: 
+[http://github.com/mehrvarz/files](http://github.com/mehrvarz/files)
+(click 'Raw')
+
+Download the web application portion:
+[https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
+
+Unzip both archives in your new rtcchat folder.
 
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
-	./rtcchat [-options]
+	./rtcchat{-os-platform} [-options]
 
 Run from source
 ---------------
