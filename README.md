@@ -27,7 +27,7 @@ rtcchat...
 Run precompiled executable
 --------------------------
 
-No specific runtimes needs to be installed. The precompiled executables are 100% selfcontained.
+No specific runtimes need to be installed. The precompiled executables are 100% selfcontained.
 
 	mkdir rtcchat
 	cd rtcchat
