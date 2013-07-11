@@ -1,18 +1,18 @@
-rtcchat
-=======
+rtc chat
+========
 
 WebRTC peer-to-peer chat service written in Go
 
 Q: What does it takes to connect two browsers, both behind NAT?<br/> 
-A: A secret word
+A: A secret word.
 
 <img style="margin-left:0px" src="rtcchat.png" /><br/>
 
 Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
 
-Try out live rtcchat: [https://timur.mobi/rtcchat](https://timur.mobi/rtcchat/)
+Try out live rtcchat: [http://timur.mobi/rtcchat](http://timur.mobi/rtcchat/)
 
-(My site is using a self-signed certificate.)
+(Please note: my site is using a self-signed certificate.)
 
 Features
 --------
