@@ -1,24 +1,18 @@
 rtc chat
 ========
 
-WebRTC peer-to-peer chat service written in Go
+A WebRTC peer-to-peer chat service written in Go
+
+rtcchat helps two browsers establish a direct p2p data link.
 
 Q: What does it take to connect two browsers, both behind NAT?<br/> 
-A: A secret word.
+A: One secret word.
 
 <img style="margin-left:0px" src="rtcchat.png" /><br/>
 
 rtc chat works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
 
-Try out: [live rtcchat](http://timur.mobi/rtcchat/) (Site is using a self-signed certificate for https)
-
-Features
---------
-
-- rtcchat helps two browsers establish a direct data link
-- p2p communication works over encrypted, reliable UDP
-- comes with it's own STUN and signaling services
-- no 3rd-party servers will be contacted
+Try it out: [live rtcchat](http://timur.mobi/rtcchat/) (site is using a self-signed certificate for https)
 
 How does it work
 ----------------
@@ -34,27 +28,36 @@ How does it work
 - the other party will respond by sending back a WebRTC answer 
 - as soon as your browser has received the WebRTC answer it will kill the server connection
 - a direct p2p WebRTC will now be established
+- p2p communication are done over encrypted, reliable UDP
+
+What is special
+---------------
+
+Two things!
+
+1. Unlike other WebRTC solutions, the rtcchat client will NOT instruct your device 
+to contact any 3rd party servers, say, in order to retrieve your devices own public IP address.
+rtcchat comes with it's own STUN and signaling services.
+
+2. Installation couldn't be easier. rtc chat server is 100% selfcontained (it's a single 
+executable). And there are no requirements to install any programming languages or 3rd party frameworks. 
 
 Run precompiled executable
 --------------------------
 
-No specific runtimes need to be installed. The precompiled executables are 100% selfcontained.
-
 	mkdir rtcchat
 	cd rtcchat
 
-Download: 
-
-1. one of the precompiled executable binaries for your platform from: 
+1. Download one of the precompiled executable binaries for your platform from: 
 [http://github.com/mehrvarz/files](http://github.com/mehrvarz/files)
 (click 'Raw')
 
-2. the platform neutral web application archive:
+2. Download the platform neutral web application:
 [https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
 
-Unzip both archives into your new "rtcchat" folder.
+3. Unzip both archives into one folder.
 
-Create keys for WebSocket signaling over https (see below).
+4. Create keys for WebSocket signaling over https (see below).
 Or run your executable with option: -secure=false
 
 This is how your rtcchat folder should look:
@@ -71,7 +74,7 @@ This is how your rtcchat folder should look:
 			cert.pem
 		rtcchat-darwin-amd64
 
-Now you can run the executable:
+5. Now you can run the executable:
 
 	./rtcchat{-os-platform} [-options]
 
