@@ -398,7 +398,7 @@ function bindSocketEvents(){
 				    pc2.setRemoteDescription(offerDesc,function () {
 				        console.log("user 2 setRemoteDescription offerDesc done; create answer...");
 				        pc2.createAnswer(function (answerDesc) {
-				            // TODO: chrome failes here 0.0.0.0
+				            // TODO: chrome failes here with 0.0.0.0
 				            console.log("user 2 created local answer", JSON.stringify(answerDesc));
 				            localOffer = answerDesc;
 				            // PeerConnection won't start gathering candidates until setLocalDescription() called
@@ -417,6 +417,7 @@ function bindSocketEvents(){
 				                    // and wait for the p2p connection
 				                    console.log("user 2 wait for the p2p connection...");
 				                    $('#waitForConnection').modal('show');
+				                    // TODO: timeout needed?
 				                } else {
 				                    console.log("user 2 failed to send data over socket connection");
 				                    writeToChatLog("failed to send data over socket connection", "text-success");
@@ -464,8 +465,8 @@ function bindSocketEvents(){
 				        $('#waitForConnection').modal('show');
 				        // waiting for p2p connection (onconnection event to call handleRtcConnection)
 				    }, function () { 
-				        // moz as pc1 receives this when talking to chromium as pc2 
-				        // because chromium sendes an empty sdp answer
+				        // - pc1 receives this when talking to chrome/chromium as pc2 
+				        //   because chromium sendes an empty sdp answer - or one with 0.0.0.0
 				        console.warn("pc1.setRemoteDescription failed"); 
 				        webrtcDisconnect();
 				    });
