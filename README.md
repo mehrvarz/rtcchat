@@ -3,7 +3,7 @@ rtc chat
 
 A WebRTC peer-to-peer chat service written in Go
 
-rtcchat helps two browsers establish a direct p2p data link.
+rtc chat helps two browsers establish a direct p2p data link.
 
 Q: What does it take to connect two browsers, both behind NAT?<br/> 
 A: One secret word.
@@ -14,8 +14,8 @@ rtc chat works with [Firefox 22+](http://getfirefox.com/) on the Desktop and wit
 
 Try it out: [live rtcchat](http://timur.mobi/rtcchat/) (site is using a self-signed certificate for https)
 
-How does it work
-----------------
+How it works
+------------
 
 - your browser will fetch the rtc chat web app and will switch to https
 - the secret word you enter will be sent to the rtc chat server 
@@ -37,7 +37,7 @@ Two things!
 
 1. Unlike other WebRTC solutions, rtc chat client will NOT instruct your device 
 to contact any 3rd party servers, say, in order to retrieve your devices own public IP address.
-rtcchat comes with it's own STUN and signaling services.
+rtcchat comes with it's own STUN and signaling services, as well as a web server.
 
 2. Installation couldn't be easier. rtc chat server is 100% selfcontained (it's a single 
 executable). And there are no requirements to install any programming languages or 3rd party frameworks. 
@@ -131,7 +131,7 @@ Open two instances of Firefox and browse to:
 More info
 ---------
 
-- [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
+- WebRTC Google I/O 2013 [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
 
 License
 -------
