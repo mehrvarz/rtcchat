@@ -33,7 +33,7 @@ How does it work
 - rtc chat server will forward your WebRTC offer to the other party
 - the other party will respond by sending back a WebRTC answer 
 - as soon as your browser has received the WebRTC answer it will kill the server connection
-- a direct p2p WebRTC will be established
+- a direct p2p WebRTC will now be established
 
 Run precompiled executable
 --------------------------
