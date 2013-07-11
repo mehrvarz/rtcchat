@@ -30,6 +30,8 @@ How does it work
 - a direct p2p WebRTC will now be established
 - p2p communication are done over encrypted, reliable UDP
 
+More info: [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
+
 What is special
 ---------------
 
@@ -93,17 +95,6 @@ Now you can run the main package:
 
 	go run rtcchat/main.go [-options]
 
-Server command line options
----------------------------
-
-This tables shows command line options with their default values:
-
-	-hostaddr="": set host ip address
-	-sigport=8077: set signaling port
-	-stunport=19253: set STUNs port
-	-secure=true: set to false to allow signaling over http instead of https
-	-webroot="webroot": set path to webroot
-
 Create keys for WebSocket signaling over https
 ----------------------------------------------
 
@@ -120,6 +111,17 @@ Alternative: link to your existing keys froms /etc/nginx
 	cd ..
 
 Please note: the "keys" subfolder is expected to contain two files: "cert.pem" and "key.pem".
+
+Server command line options
+---------------------------
+
+This tables shows command line options with their default values:
+
+	-hostaddr="": set host ip address
+	-sigport=8077: set signaling port
+	-stunport=19253: set STUNs port
+	-secure=true: set to false to allow signaling over http instead of https
+	-webroot="webroot": set path to webroot
 
 Establish p2p connection
 ------------------------
