@@ -43,16 +43,22 @@ Download:
 
 Unzip both archives into the same new "rtcchat" folder.
 
-Create keys for WebSocket signaling over https (see below) or add option: -secure=false
+Create keys for WebSocket signaling over https (see below).
+Or run your executable with option: -secure=false
+
+This is how your rtcchat folder should look like:
 
 	rtcchat
 		webroot
 			index.html
 			rtcchat.js
 			...
+		keys
+			key.pem
+			cert.pem
 		rtcchat-darwin-amd64
 
-Run the executable:
+Now run the executable:
 
 	./rtcchat{-os-platform} [-options]
 
