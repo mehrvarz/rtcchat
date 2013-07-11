@@ -27,7 +27,7 @@ rtcchat...
 Run precompiled executable
 --------------------------
 
-No special environment needs to be installed. The precompiled executable is fully selfcontained.
+No specific runtimes needs to be installed. The precompiled executables are 100% selfcontained.
 
 	mkdir rtcchat
 	cd rtcchat
@@ -41,24 +41,26 @@ Download:
 2. the platform neutral web application archive:
 [https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
 
-Unzip both archives into the same new "rtcchat" folder.
+Unzip both archives into your new "rtcchat" folder.
 
 Create keys for WebSocket signaling over https (see below).
 Or run your executable with option: -secure=false
 
-This is how your rtcchat folder should look like:
+This is how your rtcchat folder should look:
 
 	rtcchat
 		webroot
 			index.html
 			rtcchat.js
+			adapter.js
+			bootstrap.min.css
 			...
 		keys
 			key.pem
 			cert.pem
 		rtcchat-darwin-amd64
 
-Now run the executable:
+Now you can run the executable:
 
 	./rtcchat{-os-platform} [-options]
 
@@ -74,7 +76,6 @@ Create keys for WebSocket signaling over https (see below) or add option: -secur
 
 	go run rtcchat/main.go [-options]
 
-	
 Server command line options
 ---------------------------
 
@@ -106,7 +107,7 @@ Please note: the "keys" subfolder is expected to contain two files: "cert.pem" a
 Establish p2p connection
 ------------------------
 
-Open Firefox on two devices and browse to: 
+Open two instances of Firefox and browse to: 
 
 	https://{hostaddr}:8077/rtcchat
 
