@@ -74,6 +74,8 @@ Golang 1.1 needs to be installed.
 
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
+Now you can run the main package:
+
 	go run rtcchat/main.go [-options]
 
 Server command line options
