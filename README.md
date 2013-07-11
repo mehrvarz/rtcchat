@@ -29,9 +29,9 @@ No special environment needs to be installed. The precompiled executable is full
 
 	mkdir rtcchat && cd rtcchat
 
-TODO: Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip)
+(TODO: Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip))
 
-TODO: show directory structure
+(TODO: show directory structure)
 
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
@@ -45,7 +45,7 @@ Golang 1.1 needs to be installed.
 	go get github.com/mehrvarz/rtcchat
 	cd $GOPATH/src/github.com/mehrvarz/rtcchat
 
-TODO: show directory structure
+(TODO: show directory structure)
 
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
 
