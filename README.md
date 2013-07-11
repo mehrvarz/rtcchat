@@ -9,7 +9,9 @@ A: A secret word
 
 Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
 
-Try out live rtcchat: [https://timur.mobi/rtcchat/](https://timur.mobi/rtcchat/)
+Try out live rtcchat: [https://timur.mobi/rtcchat](https://timur.mobi/rtcchat/)
+
+(My site is using a self-signed certificate.)
 
 Features
 --------
