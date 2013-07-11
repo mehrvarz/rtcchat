@@ -50,13 +50,8 @@ Run precompiled executable
 
 1. Download one of the precompiled executable binaries from: 
 [http://github.com/mehrvarz/files](http://github.com/mehrvarz/files)
-(click 'Raw'). Executables are available for the following platforms:
-
-- rtcchat-linux-386.zip
-- rtcchat-linux-amd64.zip
-- rtcchat-linux-arm.zip
-- rtcchat-darwin-amd64.zip
-- rtcchat-windows-amd64.zip
+(click 'Raw'). Executables are available for the following platforms: 
+linux-amd64, linux-386, linux-arm, darwin-amd64 and windows-amd64.
 
 2. Download the platform neutral web application:
 [https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
