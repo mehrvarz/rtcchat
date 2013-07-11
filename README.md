@@ -12,7 +12,6 @@ Works with Firefox 22+ on the Desktop and with Firefox 25 on Android.
 **Work in progress: uploading of components is still ongoing.**
 
 
-
 Features
 --------
 
@@ -79,7 +78,7 @@ Alternative: link to your existing keys froms /etc/nginx
 	ln -s /etc/nginx/key.pem key.pem
 	cd ..
 
-Please note, that the "keys" subfolder is expected to contain two files: "keys/cert.pem" and "keys/key.pem".
+Please note: the "keys" subfolder is expected to contain two files: "cert.pem" and "key.pem".
 
 Establish p2p connection
 ------------------------

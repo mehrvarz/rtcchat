@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Timur's rtc chat</title>
+<script src="adapter.js"></script>
+<script src="jquery-2.0.0.js"></script>
+<script src="bootstrap.min.js"></script>
+<link href="bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap-responsive.min.css" rel="stylesheet">
+</head>
+<body style="height:100%">
+
+<div style="position:relative; margin-top:10%;">
+  <div style="position:absolute; left:10%;">
+    <div class="span10">
+      <p class="head muted" style="margin-left:6px;">Timur's rtc chat</p>
+      <fieldset class="well">
+        <div class="text-info" id="chatlog" style="height:150px; overflow:auto;"></div>
+      </fieldset>
+      <form class="form-inline" action="javascript:sendMessageFromForm()">
+        <input type="text" id="messageTextBox" placeholder="Type your message here" autocomplete="off"
+          style="width:70%">
+        <button type="button" id="sendMessageBtn" class="btn">Send</button>
+      </form>
+      <!--input type="file" id="fileBtn"-->
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="getRoomName" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" hidden>
+  <div class="modal-header">
+    <h3 id="myModalLabel">Start rtc chat</h3>
+  </div>
+  <div class="modal-body">
+    Enter:
+    <br/>
+    <form class="form-inline" action="javascript:roomNameFromForm()">
+      <input type="text" id="roomName" placeholder="room name" autocomplete="off">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="setRoomBtn" data-dismiss="modal" aria-hidden="true">Connect</button>
+  </div>
+</div>
+
+<div class="modal" id="waitForConnection" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" hidden>
+  <div class="modal-header">
+    <h3 id="myModalLabel">Waiting for connection</h3>
+  </div>
+  <div class="modal-body">
+    This dialog will disappear when a connection is made.
+  </div>
+  <div class="spinner" align="center">
+    <img src="spinner.gif"></img>
+  </div>
+</div>
+
+<script src="rtcchat.js"></script>
+</body>
+</html>
+
