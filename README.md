@@ -12,14 +12,12 @@ Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefo
 
 Try out live rtcchat: [http://timur.mobi/rtcchat](http://timur.mobi/rtcchat/)
 
-(Please note: my site is using a self-signed certificate.)
+(Site is using a self-signed certificate.)
 
 Features
 --------
 
-rtcchat...
-
-- helps two browsers establish a direct data link
+- rtcchat helps two browsers establish a direct data link
 - p2p communication works over encrypted, reliable UDP
 - comes with it's own STUN and signaling services
 - no 3rd-party servers will be contacted
