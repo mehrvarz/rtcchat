@@ -29,18 +29,30 @@ Run precompiled executable
 
 No special environment needs to be installed. The precompiled executable is fully selfcontained.
 
-	mkdir rtcchat && cd rtcchat
+	mkdir rtcchat
+	cd rtcchat
 
-Download a precompiled binary for your platform from: 
+Download: 
+
+1. one of the precompiled executable binaries for your platform from: 
 [http://github.com/mehrvarz/files](http://github.com/mehrvarz/files)
 (click 'Raw')
 
-Download the web application portion:
+2. the platform neutral web application archive:
 [https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip](https://github.com/mehrvarz/files/raw/master/rtcchat-webroot.zip)
 
-Unzip both archives in your new rtcchat folder.
+Unzip both archives into the same new "rtcchat" folder.
 
 Create keys for WebSocket signaling over https (see below) or add option: -secure=false
+
+	rtcchat
+		webroot
+			index.html
+			rtcchat.js
+			...
+		rtcchat-darwin-amd64
+
+Run the executable:
 
 	./rtcchat{-os-platform} [-options]
 
