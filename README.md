@@ -135,7 +135,7 @@ This project uses code from:
 
 bootstrap.js: Copyright 2012 Twitter, Inc; Apache License, Version 2.0.<br/>
 jquery: Copyright jQuery Foundation and contributors; MIT License.<br/>
-adapter.js: Copyright 2013 Chris Ball <chris@printf.net>.<br/>
+adapter.js + serverless-webrtc.js: Copyright 2013 Chris Ball <chris@printf.net>.<br/>
 
 For the rest:
 
