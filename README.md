@@ -20,6 +20,21 @@ Features
 - comes with it's own STUN and signaling services
 - no 3rd-party servers will be contacted
 
+How does it work
+----------------
+
+- your browser will fetch the rtc chat web app and will switch to https
+- the secret word you enter will be sent to the rtc chat server 
+- because noone else is using your secret word currently, you have to wait
+- the STUN service on the rtc chat server has already provided you with your public ip address
+- now someone else is starting to use rtc chat and is entering the same secret word
+- rtc chat will immediately provide your browser with this info, WebRTC signaling will now start
+- your browser will generated a WebRTC offer and will send it to the rtc chat server
+- rtc chat server will forward your WebRTC offer to the other party
+- the other party will respond by sending back a WebRTC answer 
+- as soon as your browser has received the WebRTC answer it will kill the server connection
+- a direct p2p WebRTC will be established
+
 Run precompiled executable
 --------------------------
 
