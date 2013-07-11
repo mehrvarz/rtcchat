@@ -7,10 +7,9 @@ Q: What does it takes to connect two browsers, both behind a NAT?
 
 A: A secret word
 
-Works with Firefox 22+ on the Desktop and with Firefox 25 on Android.
+Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
 
-**Work in progress: uploading of components is still ongoing.**
-
+Try out live rtcchat: [https://timur.mobi/rtcchat/](https://timur.mobi/rtcchat/)
 
 Features
 --------
@@ -29,7 +28,7 @@ No special environment needs to be installed. The precompiled executable is full
 
 	mkdir rtcchat && cd rtcchat
 
-Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip)
+TODO: Download & unzip [http://github.com/mehrvarz/files/rtcchat.zip](http://github.com/mehrvarz/files/rtcchat.zip)
 
 TODO: show directory structure
 
