@@ -30,8 +30,6 @@ How does it work
 - a direct p2p WebRTC will now be established
 - p2p communication are done over encrypted, reliable UDP
 
-More info: [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
-
 What is special
 ---------------
 
@@ -123,12 +121,17 @@ This tables shows command line options with their default values:
 	-secure=true: set to false to allow signaling over http instead of https
 	-webroot="webroot": set path to webroot
 
-Establish p2p connection
-------------------------
+Establishing p2p connections
+----------------------------
 
 Open two instances of Firefox and browse to: 
 
 	https://{hostaddr}:8077/rtcchat
+
+More info
+---------
+
+- [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
 
 License
 -------
