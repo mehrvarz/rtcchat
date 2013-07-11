@@ -75,7 +75,7 @@ This is how your rtcchat folder should look:
 			cert.pem
 		rtcchat-darwin-amd64
 
-5. Now you can run the executable:
+Now run the executable:
 
 	./rtcchat{-os-platform} [-options]
 
