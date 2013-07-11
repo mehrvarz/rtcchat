@@ -3,7 +3,7 @@ rtcchat
 
 WebRTC peer-to-peer chat service written in Go
 
-Q: What does it takes to connect two browsers, both behind a NAT? 
+Q: What does it takes to connect two browsers, both behind a NAT?<br/> 
 A: A secret word
 
 Works with [Firefox 22+](http://getfirefox.com/) on the Desktop and with [Firefox 25+ on Android](http://ftp.mozilla.org/pub/mozilla.org/mobile/nightly/latest-mozilla-central-android/).
