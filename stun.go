@@ -6,11 +6,15 @@
 package rtcchat
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"net"
 	"os"
 )
+
+//var lastClientRemoteAddrIP4 net.IP
+var lastAddr net.IP
 
 func StunUDP(hostaddr string, port int) {
 	var TAG = "StunUDP"
@@ -72,7 +76,12 @@ func StunUDP(hostaddr string, port int) {
 			os.Exit(1)
 		}
 		clientRemoteAddrIP4 := addr.IP.To4()
-		fmt.Println(TAG, "conn addr IP=", clientRemoteAddrIP4, len(clientRemoteAddrIP4))
+
+		// don't wanna print IP addre with every request - if it doesn't change
+		if(bytes.Compare(addr.IP,lastAddr)!=0) {
+			fmt.Println(TAG, "conn addr IP=", clientRemoteAddrIP4)
+			lastAddr = addr.IP
+		}
 		//fmt.Println(TAG,"Read len",l,"\n",hex.Dump(buf[0:l]))  // import "encoding/hex"
 		if l <= 10 {
 			// something is wrong with the request

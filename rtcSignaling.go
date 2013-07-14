@@ -13,15 +13,18 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"os/exec"
 	"text/template"
 	"time"
 )
 
 var TAG = "RtcSignaling"
+var newRoomScript = ""
 
-func RtcSignaling(secure bool, webroot string, sigport int, stunport int) {
+func RtcSignaling(secure bool, webroot string, sigport int, stunport int, setNewRoomScript string) {
 	certFile := "keys/cert.pem"
 	keyFile := "keys/key.pem"
+	newRoomScript = setNewRoomScript
 
 	if secure {
 		// make sure our https-keys are there
@@ -167,6 +170,19 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 					fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":[]}`, roomName))
 				if err1 != nil {
 					fmt.Println(TAG, "WsSessionHandler subscribe: websocket.Message.Send", err1)
+				} else {
+					fmt.Println(TAG, "WsSessionHandler newRoomScript", newRoomScript)
+					if(newRoomScript!="") {
+						go func() {
+							cmd := exec.Command("sh","-c",newRoomScript,roomName)
+							out, err := cmd.Output()
+							if err != nil {
+		 						fmt.Println(err.Error())
+		 					} else {
+		 						fmt.Print(string(out))
+		 					}
+     					}()
+					}
 				}
 
 			} else {

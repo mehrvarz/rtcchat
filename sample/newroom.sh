@@ -1,0 +1,1 @@
+play sample/ping_da_ding_ding_ding.ogg

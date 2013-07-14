@@ -20,10 +20,11 @@ import (
 func main() {
 	// note: values of stunport and sigport will be patched into "/rtcchat/rtcchat.js"
 	var hostaddr = flag.String("hostaddr", "", "set host ip address")
-	var stunport = flag.Int("stunport", 19253, "set STUNs port")
+	var stunport = flag.Int("stunport", 19253, "set STUN port")
 	var sigport = flag.Int("sigport", 8077, "set signaling port")
 	var secure = flag.Bool("secure", true, "set false to allow signaling over http instead of https")
-	var webroot = flag.String("webroot", "webroot", "set path to webroot")
+	var webroot = flag.String("webroot", "webroot", "set path to webroot folder")
+	var newRoomCmd = flag.String("newroom", "", "set newroom command (e.g. -newroom=sample/newroom.sh)")
 	flag.Usage = func () {
 		flag.PrintDefaults()
 		os.Exit(0)
@@ -36,7 +37,8 @@ func main() {
 	// start WebSocket signaling over https
 	fmt.Println("secure",*secure)
 	fmt.Println("webroot",*webroot)
-	go rtcchat.RtcSignaling(*secure,*webroot,*sigport,*stunport)
+	fmt.Println("newRoomCmd",*newRoomCmd)
+	go rtcchat.RtcSignaling(*secure,*webroot,*sigport,*stunport,*newRoomCmd)
 
 	// let services run til aborted
 	select {}
