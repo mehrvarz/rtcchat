@@ -132,6 +132,7 @@ More info
 ---------
 
 - WebRTC Google I/O 2013 [https://www.youtube.com/watch?v=p2HzZkd2A40](https://www.youtube.com/watch?v=p2HzZkd2A40)
+- My blog [http://mehrvarz.github.io/rtcchat](http://mehrvarz.github.io/rtcchat/)
 
 License
 -------
