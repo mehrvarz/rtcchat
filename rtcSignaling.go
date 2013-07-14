@@ -222,14 +222,15 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 				}
 			}
 			//fmt.Println(TAG,"WsSessionHandler messageForward: myClientId", myClientId)
-			msg, err := json.Marshal(msg["message"])
+			message, err := json.Marshal(msg["message"])
 			if err != nil {
 				fmt.Println(TAG, "WsSessionHandler messageForward: json.Marshal err:", err)
 				continue
 			}
-			var dd = fmt.Sprintf(`{"command":"messageForward", "message": %s}`, msg)
-			//fmt.Println(TAG,"WsSessionHandler messageForward dd:",dd)
-			err2 := websocket.Message.Send(otherCws, dd)
+			msgType := msg["msgType"]
+			var json = fmt.Sprintf(`{"command":"messageForward", "msgType":"%s", "message": %s}`, msgType, message)
+			//fmt.Println(TAG,"WsSessionHandler messageForward json:",json)
+			err2 := websocket.Message.Send(otherCws, json)
 			if err2 != nil {
 				fmt.Println(TAG, "WsSessionHandler messageForward: websocket.Message.Send err:", err2)
 			}

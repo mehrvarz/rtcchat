@@ -17,6 +17,7 @@ var pc1 = null;
 var pc2 = null;
 var webrtcDataChannel = null;
 var roomName = null;
+var serverRoutedMessaging = false;
 
 $('#waitForConnection').modal('hide');
 
@@ -205,145 +206,146 @@ function bindSocketEvents(){
 				    subscribeRoom(roomName);
 				}
 
-				console.log("ready: RTCPeerConnection for pc1",icecfg, con);
-				pc1 = new RTCPeerConnection(icecfg, con);  // user 1 = server
-				console.log("ready: set pc1.onconnection");
-				pc1.onconnection = handleRtcConnection;
+                if(!serverRoutedMessaging) {
+				    console.log("ready: RTCPeerConnection for pc1",icecfg, con);
+				    pc1 = new RTCPeerConnection(icecfg, con);  // user 1 = server
+				    console.log("ready: set pc1.onconnection");
+				    pc1.onconnection = handleRtcConnection;
 
-				console.log("ready: RTCPeerConnection for pc2",icecfg, con);
-				pc2 = new RTCPeerConnection(icecfg, con);  // user 2 = client
-				console.log("ready: set pc2.onconnection");
-				pc2.onconnection = handleRtcConnection;
+				    console.log("ready: RTCPeerConnection for pc2",icecfg, con);
+				    pc2 = new RTCPeerConnection(icecfg, con);  // user 2 = client
+				    console.log("ready: set pc2.onconnection");
+				    pc2.onconnection = handleRtcConnection;
 
-				//if(getUserMedia){
-				//    getUserMedia({'audio':true, fake:true}, function (stream) {
-				//        console.log("Got local audio", stream);
-				//        pc1.addStream(stream);
-				//    }, function (err) { console.warn("getUserMedia error",err); });
-				//} else {
-				//    //alert('Your browser does not support the getUserMedia() API.');
-				//    console.log("Your browser does not support the getUserMedia() API");
-				//    writeToChatLog("Your browser does not support the getUserMedia() API");
-				//} 
+				    //if(getUserMedia){
+				    //    getUserMedia({'audio':true, fake:true}, function (stream) {
+				    //        console.log("Got local audio", stream);
+				    //        pc1.addStream(stream);
+				    //    }, function (err) { console.warn("getUserMedia error",err); });
+				    //} else {
+				    //    //alert('Your browser does not support the getUserMedia() API.');
+				    //    console.log("Your browser does not support the getUserMedia() API");
+				    //    writeToChatLog("Your browser does not support the getUserMedia() API");
+				    //} 
 
-				if (navigator.mozGetUserMedia) {
-				    console.log("ready: pc1CreateDataChannel()");
-				    pc1CreateDataChannel();
-				} else {
-				    console.log("ready: not getting data channel for ",navigator.mozGetUserMedia);
-				}
-
-				pc2.ondatachannel = function (e) {
-				    webrtcDataChannel = e.channel || e; // Chrome sends event, FF sends raw channel
-				    console.log("pc2.ondatachannel set webrtcDataChannel",
-				    	webrtcDataChannel,webrtcDataChannel.label);
-				    if(!webrtcDataChannel) {
-				        writeToChatLog("failed to create webrtc dataChannel", "text-success");
-				        return;
+				    if (navigator.mozGetUserMedia) {
+				        console.log("ready: pc1CreateDataChannel()");
+				        pc1CreateDataChannel();
+				    } else {
+				        console.log("ready: not getting data channel for ",navigator.mozGetUserMedia);
 				    }
 
-				    //var fileReceiver2 = new FileReceiver();
+				    pc2.ondatachannel = function (e) {
+				        webrtcDataChannel = e.channel || e; // Chrome sends event, FF sends raw channel
+				        console.log("pc2.ondatachannel set webrtcDataChannel",
+				        	webrtcDataChannel,webrtcDataChannel.label);
+				        if(!webrtcDataChannel) {
+				            writeToChatLog("failed to create webrtc dataChannel", "text-success");
+				            return;
+				        }
 
-				    webrtcDataChannel.onopen = function () {
-				        console.log("pc2 webrtcDataChannel.onopen");
-				        // we slightly delay our 'established p2p' msg, so that 
-				        // it appears after the 'disconnect from signaling server' msg
-						window.setTimeout(function() {
-					        writeToChatLog("established p2p connection", "text-success");
-						    // shall we show other client's ip-addr?
+				        //var fileReceiver2 = new FileReceiver();
 
-						    // greetings: we can now start to send p2p data
-						    //if(webrtcDataChannel) {
-					        //    console.log("pc2 webrtcDataChannel.onopen; send hello from pc2...");
-					        //    var msg = "Hello from pc2";
-					        //    writeToChatLog(msg, "text-success");
-					        //    webrtcDataChannel.send(msg);
-						    //} else {
-						    //    writeToChatLog("failed to send data over webrtcDataChannel", "text-success");
+				        webrtcDataChannel.onopen = function () {
+				            console.log("pc2 webrtcDataChannel.onopen");
+				            // we slightly delay our 'established p2p' msg, so that 
+				            // it appears after the 'disconnect from signaling server' msg
+						    window.setTimeout(function() {
+					            writeToChatLog("established p2p connection", "text-success");
+						        // shall we show other client's ip-addr?
+
+						        // greetings: we can now start to send p2p data
+						        //if(webrtcDataChannel) {
+					            //    console.log("pc2 webrtcDataChannel.onopen; send hello from pc2...");
+					            //    var msg = "Hello from pc2";
+					            //    writeToChatLog(msg, "text-success");
+					            //    webrtcDataChannel.send(msg);
+						        //} else {
+						        //    writeToChatLog("failed to send data over webrtcDataChannel", "text-success");
+						        //}
+						    },300);
+				        };
+
+				        webrtcDataChannel.ondisconnect = function() {
+				            console.log("pc2 webrtcDataChannel.ondisconnect !!!!");
+				            webrtcDisconnect();
+				        };
+
+				        webrtcDataChannel.onclosedconnection = function() {
+				            console.log("pc2 webrtcDataChannel.onclosedconnection !!!!");
+				            webrtcDisconnect();
+				        };
+
+				        webrtcDataChannel.onclose = function() {
+				            console.log("pc2 webrtcDataChannel.onclose");
+				            webrtcDisconnect();
+				        };
+
+				        webrtcDataChannel.onerror = function() {
+				            console.log("pc2 webrtcDataChannel.onerror");
+				            writeToChatLog("webrtc error", "text-success");
+				        };
+
+				        webrtcDataChannel.onmessage = function (e) {
+				            // msgs received by user 2
+				            console.log("pc2 webrtcDataChannel.onmessage", e.data);
+
+						    //if (e.data.size) {
+						    //    fileReceiver2.receive(e.data, {});
 						    //}
-						},300);
+						    //else {
+						    //    var data = JSON.parse(e.data);
+						    //    if (data.type === 'file') {
+						    //        fileReceiver2.receive(e.data, {});
+						    //    }
+						    //    else {
+						    //        //writeToChatLog(data.message, "text-info");
+						    //        // Scroll chat text area to the bottom on new input.
+						    //        //$('#chatlog').scrollTop($('#chatlog')[0].scrollHeight);
+						    //    }
+						    //}
+
+				            writeToChatLog(e.data, "text-info");
+				        };
 				    };
 
-				    webrtcDataChannel.ondisconnect = function() {
-				        console.log("pc2 webrtcDataChannel.ondisconnect !!!!");
-				        webrtcDisconnect();
+				    pc2.onaddstream = function (e) {
+				        console.log("pc2 got remote stream", e);
+				        var el = new Audio();
+				        el.autoplay = true;
+				        attachMediaStream(el, e.stream);
 				    };
 
-				    webrtcDataChannel.onclosedconnection = function() {
-				        console.log("pc2 webrtcDataChannel.onclosedconnection !!!!");
-				        webrtcDisconnect();
-				    };
+				    // pc1.onicecandidate = function (e) {
+				    //     console.log("pc1.onicecandidate");
+				    //     // This is for Chrome - MOZ has e.candidate alway set to null
+				    //     if (!navigator.mozGetUserMedia) {
+				    //  	   // TODO chrome?
+				    //  	   if (e.candidate) {
+				    //             if (e.candidate.candidate) {
+				    //                 console.log("ICE candidate (pc1)", JSON.stringify(e.candidate.candidate));
+				    //                 pc2.addIceCandidate(e.candidate.candidate);
+				    //             } else {
+				    //         	       console.log("ICE candidate (pc1) - no candidate");
+				    //             }
+				    //      
+				    //         } else {
+				    //             console.log("ICE candidate (pc1) no e.candidate", e);
+				    //         }
+				    //     }
+				    // };
 
-				    webrtcDataChannel.onclose = function() {
-				        console.log("pc2 webrtcDataChannel.onclose");
-				        webrtcDisconnect();
-				    };
-
-				    webrtcDataChannel.onerror = function() {
-				        console.log("pc2 webrtcDataChannel.onerror");
-				        writeToChatLog("webrtc error", "text-success");
-				    };
-
-				    webrtcDataChannel.onmessage = function (e) {
-				        // msgs received by user 2
-				        console.log("pc2 webrtcDataChannel.onmessage", e.data);
-
-						//if (e.data.size) {
-						//    fileReceiver2.receive(e.data, {});
-						//}
-						//else {
-						//    var data = JSON.parse(e.data);
-						//    if (data.type === 'file') {
-						//        fileReceiver2.receive(e.data, {});
-						//    }
-						//    else {
-						//        //writeToChatLog(data.message, "text-info");
-						//        // Scroll chat text area to the bottom on new input.
-						//        //$('#chatlog').scrollTop($('#chatlog')[0].scrollHeight);
-						//    }
-						//}
-
-				        writeToChatLog(e.data, "text-info");
-				    };
-				};
-
-				pc2.onaddstream = function (e) {
-				    console.log("pc2 got remote stream", e);
-				    var el = new Audio();
-				    el.autoplay = true;
-				    attachMediaStream(el, e.stream);
-				};
-
-				// pc1.onicecandidate = function (e) {
-				//     console.log("pc1.onicecandidate");
-				//     // This is for Chrome - MOZ has e.candidate alway set to null
-				//     if (!navigator.mozGetUserMedia) {
-				//  	   // TODO chrome?
-				//  	   if (e.candidate) {
-				//             if (e.candidate.candidate) {
-				//                 console.log("ICE candidate (pc1)", JSON.stringify(e.candidate.candidate));
-				//                 pc2.addIceCandidate(e.candidate.candidate);
-				//             } else {
-				//         	       console.log("ICE candidate (pc1) - no candidate");
-				//             }
-				//      
-				//         } else {
-				//             console.log("ICE candidate (pc1) no e.candidate", e);
-				//         }
-				//     }
-				// };
-
-				if (!navigator.mozGetUserMedia) {
-				    pc1.onicecandidate = function (e) {
-				        if(e & e.candidate)
-				            pc2.addIceCandidate(e.candidate);
+				    if (!navigator.mozGetUserMedia) {
+				        pc1.onicecandidate = function (e) {
+				            if(e & e.candidate)
+				                pc2.addIceCandidate(e.candidate);
+				        }
+				        pc2.onicecandidate = function (e) {
+				            if(e & e.candidate)
+				                pc1.addIceCandidate(e.candidate);
+				        }
 				    }
-				    pc2.onicecandidate = function (e) {
-				        if(e & e.candidate)
-				            pc1.addIceCandidate(e.candidate);
-				    }
-				}
-
+                }
 				break;
 
 			case "roomclients":
@@ -352,22 +354,23 @@ function bindSocketEvents(){
 				clientCount=0;
 				console.log("roomclients setCurrentRoom",currentRoom," data.clients.length",data.clients.length);
 		
-				// add the clients to the clients list
+				// add the other clients )if any) to the clients list
 				for(var i = 0, len = data.clients.length; i < len; i++){
 					if(data.clients[i]) {
-						addClient(data.clients[i], false, false);
+						addClient(data.clients[i], false);
 					}
 				}
+				// add myself
 				if(clientId) {
 				    console.log("roomclients addClient",clientId);
-					addClient({ clientId: clientId }, false, true);
+					addClient({ clientId: clientId }, true);
 				}
 				break;
 			
 			case "presence":
 				if(data.state == 'online'){
 				    console.log("presence online: other client entered the room",clientCount);
-					addClient(data.client, true, false);
+					addClient(data.client, false);
 				} else if(data.state == 'offline') {
 					if(clientCount>0) {
 					    clientCount--;
@@ -385,7 +388,18 @@ function bindSocketEvents(){
 				var message = data.message;
 				if(!message) {
 				    console.log("messageForward: message is empty - abort");
-					return
+					return;
+				}
+
+				var msgType = data.msgType;
+				if(msgType=="message") {
+    		        writeToChatLog(message, "text-info");
+					return;
+				}
+				if(msgType=="serverconnect") {
+    			    console.log("messageForward: serverconnect");
+                    hideWaitForConnection();
+					return;
 				}
 
 				if(IAmUser==2) {
@@ -410,6 +424,7 @@ function bindSocketEvents(){
 				                    // TODO: end-to-end encrypt answerDesc, so only the other party can read it
 						    		socket.send(JSON.stringify({
 						    			command:'messageForward', 
+						    			msgType:'answer', 
 						    			message: JSON.stringify(answerDesc)
 						    		}));
 
@@ -490,17 +505,29 @@ function bindSocketEvents(){
 }
 
 // a new client has entered the room
-function addClient(client, announce, isMe){
+function addClient(client, isMe){
     clientCount++;
 	if(isMe){
-	    // it's just me who entered the room
+	    // it's just me who has entered the room
         console.log("addClient isMe wait...",client.clientId,clientCount);
+        // we are waiting for onconnect -> handleRtcConnection
 
 	} else {
 	    // the other user has arrived in the room
 	    if(clientCount==2) {
 	        IAmUser=1;
-            console.log("addClient !isMe IAmUser=1 createoffer",client.clientId, clientCount);
+            if(serverRoutedMessaging) {
+                console.log("addClient !isMe IAmUser=1 serverRoutedMessaging",client.clientId, clientCount);
+                hideWaitForConnection();
+
+                // signal server-routed connect to other user
+		    	socket.send(JSON.stringify({
+		    		command:'messageForward', 
+	    			msgType:'serverconnect', 
+		    		message: JSON.stringify("")
+		    	}));
+                return;
+            }
 
             if (!navigator.mozGetUserMedia) {
                 pc1CreateDataChannel();
@@ -508,6 +535,7 @@ function addClient(client, announce, isMe){
             }
 
             if(webrtcDataChannel) {
+                console.log("addClient !isMe IAmUser=1 createoffer",client.clientId, clientCount);
                 localOffer = null;
                 pc1.createOffer(function (offerDesc) {
                     console.log("addClient created local offer", offerDesc);
@@ -521,6 +549,7 @@ function addClient(client, announce, isMe){
                                 console.log("addClient socket.send('messageForward')");
 						    	socket.send(JSON.stringify({
 						    		command:'messageForward', 
+					    			msgType:'offer', 
 						    		message: JSON.stringify(offerDesc), 
 						    		room:currentRoom  // needed ???
 						    	}));
@@ -563,17 +592,25 @@ function addClient(client, announce, isMe){
 function sendMessage(msg) {
     console.log("sendMessage", msg);
     if (msg) {
-        if(webrtcDataChannel) {
-            $('#messageTextBox').val("");
-            writeToChatLog(msg, "text-success");
-	
-			// fileReceiver
-        	//var channel = new RTCMultiSession();
-            //channel.send({message: msg});
+        $('#messageTextBox').val("");
+        writeToChatLog(msg, "text-success");
 
-            webrtcDataChannel.send(msg);
+	    // fileReceiver
+    	//var channel = new RTCMultiSession();
+        //channel.send({message: msg});
+
+        if(serverRoutedMessaging) {
+        	socket.send(JSON.stringify({
+        		command:'messageForward', 
+			    msgType:'message', 
+        		message: JSON.stringify(msg)
+        	}));
         } else {
-            writeToChatLog("failed to send data over webrtcDataChannel", "text-success");
+            if(webrtcDataChannel) {
+                webrtcDataChannel.send(msg);
+            } else {
+                writeToChatLog("failed to send data over webrtcDataChannel", "text-success");
+            }
         }
     }
 
