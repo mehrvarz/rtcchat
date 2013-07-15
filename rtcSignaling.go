@@ -159,6 +159,7 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 			r, ok2 := roomInfoMap[roomName]
 			if !ok2 {
 				// no entry = 1st user in room: create new map entry (roomname -> clientid)
+				// TODO: retrieve and remind serverRoutedMessaging state
 				fmt.Println(TAG, "WsSessionHandler subscribe: new room", roomName, "clientId=", myClientId)
 				var r roomInfo
 				r.clientId = myClientId
@@ -194,6 +195,7 @@ func WsSessionHandler(cws *websocket.Conn, done chan bool) {
 				roomInfoMap[roomName] = r
 
 				clientArray := fmt.Sprintf(`[{"clientId": "%s"}]`, r.clientId)
+				// TODO: send other clients serverRoutedMessaging state
 				err1 := websocket.Message.Send(cws,
 					fmt.Sprintf(`{"command":"roomclients", "room":"%s", "clients":%s}`, roomName, clientArray))
 				if err1 != nil {
