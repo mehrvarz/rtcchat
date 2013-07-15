@@ -80,6 +80,7 @@ function subscribeRoom(roomName) {
     // this is also being called directly from HTML
     console.log("subscribe to roomName", roomName);
     if(socket) {
+        // TODO: let server know if serverRoutedMessaging is requested
     	socket.send(JSON.stringify({command:'subscribe', room: roomName}));
         console.log("sent subscription for roomName", roomName,"now wait-for-p2p-connection...");
         $('#waitForConnection').modal('show');
@@ -176,6 +177,7 @@ function pc1CreateDataChannel() {
             //        writeToChatLog(data.message, "text-info");
             //    }
             //}
+            document.getElementById('audiotag').play();
             writeToChatLog(e.data, "text-info");
         };
     } catch (e) { console.warn("pc1.createDataChannel exception", e); }
@@ -305,6 +307,7 @@ function bindSocketEvents(){
 						    //    }
 						    //}
 
+                            document.getElementById('audiotag').play();
 				            writeToChatLog(e.data, "text-info");
 				        };
 				    };
@@ -354,9 +357,11 @@ function bindSocketEvents(){
 				clientCount=0;
 				console.log("roomclients setCurrentRoom",currentRoom," data.clients.length",data.clients.length);
 		
-				// add the other clients )if any) to the clients list
+				// add the other clients (if any) to the clients list
 				for(var i = 0, len = data.clients.length; i < len; i++){
 					if(data.clients[i]) {
+					    // TODO: find out if other side has requested serverRoutedMessaging
+					    // serverRoutedMessaging will be activated, if any one client is requesting it
 						addClient(data.clients[i], false);
 					}
 				}
@@ -394,6 +399,7 @@ function bindSocketEvents(){
 				var msgType = data.msgType;
 				if(msgType=="message") {
     		        writeToChatLog(message, "text-info");
+                    document.getElementById('audiotag').play();
 					return;
 				}
 				if(msgType=="serverconnect") {
@@ -609,7 +615,7 @@ function sendMessage(msg) {
             if(webrtcDataChannel) {
                 webrtcDataChannel.send(msg);
             } else {
-                writeToChatLog("failed to send data over webrtcDataChannel", "text-success");
+                writeToChatLog("sendMessage failed no webrtcDataChannel", "text-success");
             }
         }
     }
