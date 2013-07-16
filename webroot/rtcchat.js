@@ -97,6 +97,7 @@ function hideWaitForConnection() {
     $('#waitForConnection').remove();
     $('#showLocalAnswer').modal('hide');
     $('#messageTextBox').focus();
+    document.getElementById('audiotag').play();
 }
 
 function handleRtcConnection() {
