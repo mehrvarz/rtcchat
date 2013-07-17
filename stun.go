@@ -13,7 +13,6 @@ import (
 	"os"
 )
 
-//var lastClientRemoteAddrIP4 net.IP
 var lastAddr net.IP
 
 func StunUDP(hostaddr string, port int) {
@@ -37,7 +36,7 @@ func StunUDP(hostaddr string, port int) {
 	// find out what ip4 host address to advertise
 	localHost := hostaddr + ":0"
 	if hostaddr == "" {
-		// no address given by command line
+		// no public local host address given by command line
 		hostname, err := os.Hostname()
 		if err != nil {
 			fmt.Println(TAG, "Oops:", err)
@@ -59,12 +58,12 @@ func StunUDP(hostaddr string, port int) {
 	// get the localHost address into an IP4 byte array
 	localHostAddr, ert := net.ResolveTCPAddr("tcp", localHost)
 	if ert != nil {
-		fmt.Println("Resolve localHost error", ert)
+		fmt.Println("Resolve localHostAddr error", ert)
 		os.Exit(1)
 	}
-	hostLocalAddrIP4 := localHostAddr.IP.To4()
-	fmt.Println(TAG, "hostLocalAddrIP4",
-		hostLocalAddrIP4[0], hostLocalAddrIP4[1], hostLocalAddrIP4[2], hostLocalAddrIP4[3])
+	localHostAddrIP4 := localHostAddr.IP.To4()
+	fmt.Println(TAG, "localHostAddrIP4",
+		localHostAddrIP4[0], localHostAddrIP4[1], localHostAddrIP4[2], localHostAddrIP4[3])
 
 	// start forever service loop
 	for {
@@ -77,9 +76,9 @@ func StunUDP(hostaddr string, port int) {
 		}
 		clientRemoteAddrIP4 := addr.IP.To4()
 
-		// don't wanna print IP addre with every request - if it doesn't change
+		// if clientRemoteAddrIP4 didn't change, we don't print it again
 		if(bytes.Compare(addr.IP,lastAddr)!=0) {
-			fmt.Println(TAG, "conn addr IP=", clientRemoteAddrIP4)
+			fmt.Println(TAG, "clientRemoteAddrIP4=", clientRemoteAddrIP4)
 			lastAddr = addr.IP
 		}
 		//fmt.Println(TAG,"Read len",l,"\n",hex.Dump(buf[0:l]))  // import "encoding/hex"
@@ -126,10 +125,10 @@ func StunUDP(hostaddr string, port int) {
 		respBuf[idx+6] = byte(port >> 8)
 		respBuf[idx+7] = byte(port & 255)
 		// host public addr
-		respBuf[idx+8] = hostLocalAddrIP4[0]
-		respBuf[idx+9] = hostLocalAddrIP4[1]
-		respBuf[idx+10] = hostLocalAddrIP4[2]
-		respBuf[idx+11] = hostLocalAddrIP4[3]
+		respBuf[idx+8] = localHostAddrIP4[0]
+		respBuf[idx+9] = localHostAddrIP4[1]
+		respBuf[idx+10] = localHostAddrIP4[2]
+		respBuf[idx+11] = localHostAddrIP4[3]
 		idx += 12
 
 		// CHANGED ADDR
