@@ -177,8 +177,7 @@ function pc1CreateDataChannel() {
             //        writeToChatLog(data.message, "text-info");
             //    }
             //}
-            document.getElementById('audiotag').play();
-            writeToChatLog(e.data, "text-info");
+            receiveMessage(e.data);
         };
     } catch (e) { console.warn("pc1.createDataChannel exception", e); }
 }
@@ -307,8 +306,7 @@ function bindSocketEvents(){
 						    //    }
 						    //}
 
-                            document.getElementById('audiotag').play();
-				            writeToChatLog(e.data, "text-info");
+                            receiveMessage(e.data);
 				        };
 				    };
 
@@ -398,8 +396,7 @@ function bindSocketEvents(){
 
 				var msgType = data.msgType;
 				if(msgType=="message") {
-    		        writeToChatLog(message, "text-info");
-                    document.getElementById('audiotag').play();
+                    receiveMessage(message);
 					return;
 				}
 				if(msgType=="serverconnect") {
@@ -595,11 +592,23 @@ function addClient(client, isMe){
 	}
 }
 
+
+function linkify(text) {
+    // aka linkify
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
+
+function receiveMessage(msg) {
+    msg = linkify(msg);
+    document.getElementById('audiotag').play();
+    writeToChatLog(msg, "text-info");
+}
+
 function sendMessage(msg) {
     console.log("sendMessage", msg);
     if (msg) {
         $('#messageTextBox').val("");
-        writeToChatLog(msg, "text-success");
 
 	    // fileReceiver
     	//var channel = new RTCMultiSession();
@@ -611,9 +620,13 @@ function sendMessage(msg) {
 			    msgType:'message', 
         		message: JSON.stringify(msg)
         	}));
+            msg = linkify(msg);
+            writeToChatLog(msg, "text-success");
         } else {
             if(webrtcDataChannel) {
                 webrtcDataChannel.send(msg);
+                msg = linkify(msg);
+                writeToChatLog(msg, "text-success");
             } else {
                 writeToChatLog("sendMessage failed no webrtcDataChannel", "text-success");
             }
