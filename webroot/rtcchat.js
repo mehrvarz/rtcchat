@@ -22,14 +22,16 @@ var serverRoutedMessaging = false;
 $('#waitForConnection').modal('hide');
 
 $(function(){
-    console.log("start: location.hostname",location.hostname);
-    icecfg = {"iceServers":[{"url":"stun:"+location.hostname+":"+stunPort}]};
+    var host = location.hostname;
+    var stunhost = host; //"timur.mobi";
+    console.log("start: location.hostname",host,stunhost);
+    icecfg = {"iceServers":[{"url":"stun:"+stunhost+":"+stunPort}]};
 
     var	socketServerAddress;
 	if(window.location.href.indexOf("https://")==0)
-		socketServerAddress = "wss://"+location.hostname+":"+wsPort+"/ws";
+		socketServerAddress = "wss://"+host+":"+wsPort+"/ws";
 	else
-		socketServerAddress = "ws://"+location.hostname+":"+wsPort+"/ws";
+		socketServerAddress = "ws://"+host+":"+wsPort+"/ws";
     console.log("start: connecting to signaling server",socketServerAddress);
     writeToChatLog("connecting to signaling server "+socketServerAddress, "text-success");
     socket = new WebSocket(socketServerAddress);
@@ -97,7 +99,6 @@ function hideWaitForConnection() {
     $('#waitForConnection').remove();
     $('#showLocalAnswer').modal('hide');
     $('#messageTextBox').focus();
-    document.getElementById('audiotag').play();
 }
 
 function handleRtcConnection() {
