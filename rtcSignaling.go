@@ -21,6 +21,16 @@ import (
 var TAG = "RtcSignaling"
 var newRoomScript = ""
 
+type roomInfo struct {
+	clientId string
+	cws      *websocket.Conn
+	users    int
+}
+
+// max number of concurrently open rooms
+var maxOpenRooms = 1000
+var roomInfoMap = make(map[string]roomInfo, maxOpenRooms)
+
 func RtcSignaling(secure bool, webroot string, sigport int, stunport int, setNewRoomScript string) {
 	certFile := "keys/cert.pem"
 	keyFile := "keys/key.pem"
@@ -100,16 +110,6 @@ func WsHandler(cws *websocket.Conn) {
 	go WsSessionHandler(cws, done)
 	<-done
 }
-
-type roomInfo struct {
-	clientId string
-	cws      *websocket.Conn
-	users    int
-}
-
-// max number of concurrently open rooms
-var maxOpenRooms = 1000
-var roomInfoMap = make(map[string]roomInfo, maxOpenRooms)
 
 // handle one complete websockets session
 func WsSessionHandler(cws *websocket.Conn, done chan bool) {

@@ -31,8 +31,10 @@ func main() {
 	}
 	flag.Parse()
 
-	// start STUN service
-	go rtcchat.StunUDP(*hostaddr,*stunport)
+	if(*stunport>0) {
+		// start STUN service
+		go rtcchat.StunUDP(*hostaddr,*stunport)
+	}
 
 	// start WebSocket signaling over https
 	fmt.Println("secure",*secure)
