@@ -6,7 +6,6 @@
 package rtcchat
 
 import (
-	"code.google.com/p/go.net/websocket"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -16,6 +15,8 @@ import (
 	"os/exec"
 	"text/template"
 	"time"
+
+	"golang.org/x/net/websocket"
 )
 
 var TAG = "RtcSignaling"
